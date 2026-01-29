@@ -8,9 +8,11 @@
 BeginPackage["SpinorReplacements`"];
 
 (* Load the external packages needed *)
-$ContextPath = Join[{"SpinorReplacements`","ExternalPackages`NumericalKinematics`","ExternalPackages`KinematicSubstitution`"}, $ContextPath];
+$ContextPath = Join[{"SpinorReplacements`","ExternalPackages`KinematicSubstitution`"}, $ContextPath];
 
 (* Public function declarations for custom spinor functions *)
+generateKinematics::usage = "generateKinematics[nF,nV,nS,{m1,...,mN}] generates a kinematics phase space point. It is the 
+moniker for a modified version of the original KinematicConfigurations of the mosca package."
 reempSpinProd::usage = "reempSpinProd[genKin] generates spinor product replacement rules from kinematic configurations.";
 randomSpinors::usage = "randomSpinors[] generates random reference spinors for polarization vectors.";
 polVectors::usage = "polVectors[kinConfigs, reempSpinors] computes polarization vectors.";
@@ -43,8 +45,9 @@ Begin["`Private`"];
 (* ========================================================================= *)
 
 (* Load mosca's NumericalKinematics *)
-Get["SpinorReplacements`ExternalPackages`NumericalKinematics`"];
+(*Get["SpinorReplacements`ExternalPackages`NumericalKinematics`"];*)
 Get["SpinorReplacements`ExternalPackages`KinematicSubstitution`"];
+generateKinematics[nF_,nV_,nS_,masses_:0]:=KinematicConfigurations[nF,nV,nS,masses];
 
 
 (* ========================================================================= *)
