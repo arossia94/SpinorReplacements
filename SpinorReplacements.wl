@@ -223,11 +223,11 @@ numPart=Length[listPs];
 ret=Flatten[Table[ToExpression["p"<>ToString[ii]][jj]->listPs[[ii,jj]],{ii,1,numPart},{jj,1,4}]]
 ];
 replacePolVecs[pol_,polVecEval_]:=Piecewise[{{
-{epsp1[i_]:>(\[Epsilon]Plus[1]/.polVecEval)[[i]],epsp2[i_]:>(\[Epsilon]Plus[2]/.polVecEval)[[i]]}
+{Global`epsp1[i_]:>(\[Epsilon]Plus[1]/.polVecEval)[[i]],Global`epsp2[i_]:>(\[Epsilon]Plus[2]/.polVecEval)[[i]]}
 ,pol=="++"}
 }];
-eqToMatch[ampOS_,ampSMEFT_,pol_]:=Block[{phSpPt,phSpPtSpinProd,phSpMom,phSpPolVec},
-phSpPt=KinematicConfigurations[0,2,1,{MW,MW,MH}];
+eqToMatch[ampOS_,ampSMEFT_,pol_,nf_,nV_,nS_,masses_:0]:=Block[{phSpPt,phSpPtSpinProd,phSpMom,phSpPolVec},
+phSpPt=generateKinematics[nf,nV,nS,masses];
 phSpPtSpinProd=reempSpinProd[phSpPt];
 phSpMom=momReplacement[phSpPt];
 phSpPolVec=replacePolVecs[pol,Flatten[polVectors[phSpPt,phSpPtSpinProd]]];
