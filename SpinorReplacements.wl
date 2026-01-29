@@ -222,10 +222,10 @@ listPs=kinConfigs["p"];
 numPart=Length[listPs];
 ret=Flatten[Table[ToExpression["p"<>ToString[ii]][jj]->listPs[[ii,jj]],{ii,1,numPart},{jj,1,4}]]
 ];
-replacePolVecs[pol_,polVecEval_]:=Piecewise[{{
-{Global`epsp1[i_]:>(\[Epsilon]Plus[1]/.polVecEval)[[i]],Global`epsp2[i_]:>(\[Epsilon]Plus[2]/.polVecEval)[[i]]}
-,pol=="++"}
-}];
+replacePolVecs[pol_,polVecEval_]:=Block[{numVecs},
+numVecs=StringLength[pol];
+Table[With[{kk=kk},RuleDelayed[ToExpression["Global`epsp"<>ToString[kk]][i_],(Piecewise[{{\[Epsilon]Plus,StringTake[pol,{kk}]=="+"},{\[Epsilon]Minus,StringTake[pol,{kk}]=="-"},{\[Epsilon]0,StringTake[pol,{kk}]=="0"}}][kk]/.polVecEval)[[i]]]],{kk,1,numVecs}]
+];
 eqToMatch[ampOS_,ampSMEFT_,pol_,nf_,nV_,nS_,masses_:0]:=Block[{phSpPt,phSpPtSpinProd,phSpMom,phSpPolVec},
 phSpPt=generateKinematics[nf,nV,nS,masses];
 phSpPtSpinProd=reempSpinProd[phSpPt];
