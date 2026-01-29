@@ -1,0 +1,143 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Wolfram 14.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       154,          7]
+NotebookDataLength[      4924,        135]
+NotebookOptionsPosition[      3842,        110]
+NotebookOutlinePosition[      4245,        126]
+CellTagsIndexPosition[      4202,        123]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"SetDirectory", "[", 
+  RowBox[{"NotebookDirectory", "[", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.978665246641878*^9, 3.9786652639147987`*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"f207abad-a462-cf44-9bd5-7a45ac592937"],
+
+Cell[BoxData["\<\"C:\\\\Users\\\\alejo\\\\Documents\\\\SpinorReplacements\"\>\
+"], "Output",
+ CellChangeTimes->{3.978665304242388*^9},
+ CellLabel->"Out[1]=",ExpressionUUID->"703cee07-be74-9347-b884-2f636354b000"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"<<", "SpinorReplacements`"}]], "Input",
+ CellChangeTimes->{{3.9786652656062565`*^9, 3.9786652713245907`*^9}},
+ CellLabel->"In[2]:=",ExpressionUUID->"8e271c27-66cf-4647-ad6d-306fe735c8e6"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "SetDelayed", "write", 
+   "\"Tag \\!\\(\\*RowBox[{\\\"NEpsilon\\\"}]\\) in \\!\\(\\*RowBox[{RowBox[{\
+\\\"NEpsilon\\\", \\\"[\\\", RowBox[{\\\"a_\\\", \\\":\\\", \\\"1\\\"}], \
+\\\"]\\\"}], \\\"/;\\\", RowBox[{\\\"NumberQ\\\", \\\"[\\\", \\\"a\\\", \\\"]\
+\\\"}]}]\\) is Protected.\"", 2, 2, 1, 24588330754787505232, "Local"},
+  "MessageTemplate",
+  BaseStyle->"MSG"]], "Message",
+ CellChangeTimes->{3.9786653077305565`*^9},
+ CellLabel->
+  "During evaluation of \
+In[2]:=",ExpressionUUID->"925f6fbd-04df-ee42-bb5d-43b1d675ebea"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "SetDelayed", "write", 
+   "\"Tag \\!\\(\\*RowBox[{\\\"ClearKinematics\\\"}]\\) in \
+\\!\\(\\*RowBox[{\\\"ClearKinematics\\\", \\\"[\\\", \\\"]\\\"}]\\) is \
+Protected.\"", 2, 2, 2, 24588330754787505232, "Local"},
+  "MessageTemplate",
+  BaseStyle->"MSG"]], "Message",
+ CellChangeTimes->{3.978665307790989*^9},
+ CellLabel->
+  "During evaluation of \
+In[2]:=",ExpressionUUID->"8a1e1b47-234d-8342-8977-65c43f92f453"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Set", "write", 
+   "\"Tag \\!\\(\\*RowBox[{\\\"GenerateKinematics\\\"}]\\) in \
+\\!\\(\\*RowBox[{\\\"Options\\\", \\\"[\\\", \\\"GenerateKinematics\\\", \
+\\\"]\\\"}]\\) is Protected.\"", 2, 2, 3, 24588330754787505232, "Local"},
+  "MessageTemplate",
+  BaseStyle->"MSG"]], "Message",
+ CellChangeTimes->{3.9786653079423428`*^9},
+ CellLabel->
+  "During evaluation of \
+In[2]:=",ExpressionUUID->"6c5137f7-20fa-4a4b-8057-fbfe25402e9e"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "SetDelayed", "write", 
+   "\"Tag \\!\\(\\*RowBox[{\\\"GenerateKinematics\\\"}]\\) in \
+\\!\\(\\*RowBox[{\\\"GenerateKinematics\\\", \\\"[\\\", \
+RowBox[{\\\"particles_List\\\", \\\",\\\", RowBox[{\\\"opts\\\", \\\":\\\", \
+RowBox[{\\\"OptionsPattern\\\", \\\"[\\\", \\\"]\\\"}]}]}], \\\"]\\\"}]\\) is \
+Protected.\"", 2, 2, 4, 24588330754787505232, "Local"},
+  "MessageTemplate",
+  BaseStyle->"MSG"]], "Message",
+ CellChangeTimes->{3.978665307962494*^9},
+ CellLabel->
+  "During evaluation of \
+In[2]:=",ExpressionUUID->"5c0be802-21de-d648-94e7-96420480f52a"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "General", "stop", 
+   "\"Further output of \\!\\(\\*StyleBox[RowBox[{\\\"SetDelayed\\\", \
+\\\"::\\\", \\\"write\\\"}], \\\"MessageName\\\"]\\) will be suppressed \
+during this calculation.\"", 2, 2, 5, 24588330754787505232, "Local"},
+  "MessageTemplate",
+  BaseStyle->"MSG"]], "Message",
+ CellChangeTimes->{3.978665307982647*^9},
+ CellLabel->
+  "During evaluation of \
+In[2]:=",ExpressionUUID->"4b0f376b-24f1-234c-ae3a-e43f457af315"]
+}, Open  ]]
+},
+WindowSize->{571, 403},
+WindowMargins->{{189, Automatic}, {Automatic, 47}},
+FrontEndVersion->"14.2 for Microsoft Windows (64-bit) (December 26, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"9fbf07f6-d2a6-ea4d-bf7b-89f307c8fbd0"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[576, 22, 250, 4, 28, "Input",ExpressionUUID->"f207abad-a462-cf44-9bd5-7a45ac592937"],
+Cell[829, 28, 212, 3, 32, "Output",ExpressionUUID->"703cee07-be74-9347-b884-2f636354b000"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1078, 36, 211, 3, 28, "Input",ExpressionUUID->"8e271c27-66cf-4647-ad6d-306fe735c8e6"],
+Cell[1292, 41, 560, 12, 26, "Message",ExpressionUUID->"925f6fbd-04df-ee42-bb5d-43b1d675ebea"],
+Cell[1855, 55, 444, 11, 26, "Message",ExpressionUUID->"8a1e1b47-234d-8342-8977-65c43f92f453"],
+Cell[2302, 68, 462, 11, 26, "Message",ExpressionUUID->"6c5137f7-20fa-4a4b-8057-fbfe25402e9e"],
+Cell[2767, 81, 590, 13, 44, "Message",ExpressionUUID->"5c0be802-21de-d648-94e7-96420480f52a"],
+Cell[3360, 96, 466, 11, 26, "Message",ExpressionUUID->"4b0f376b-24f1-234c-ae3a-e43f457af315"]
+}, Open  ]]
+}
+]
+*)
+
