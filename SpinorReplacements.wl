@@ -206,7 +206,7 @@ funcPolMassive,funcPolLight},
 listVectors=Position[Keys[kinConfigs["p"]],_?((StringContainsQ[ToString[#],"v"])&),1]//Flatten;
 pR=(IdentityMatrix[4]+gamma5)/2;
 pL=(IdentityMatrix[4]-gamma5)/2;
-listMasslessVectors=Select[listVectors,(MDot[kinConfigs["p"][[#]],kinConfigs["p"][[#]]]===0)&];
+listMasslessVectors=Select[listVectors,(Simplify[MDot[kinConfigs["p"][[#]],kinConfigs["p"][[#]]]]==0)&];
 listMassiveVectors=Complement[listVectors,listMasslessVectors];
 (*/// Random Reference spinors. ///*)
 {Angr,rAng,Sqr,rSq}=randomSpinors[];
