@@ -231,7 +231,7 @@ phSpPt=generateKinematics[nf,nV,nS,masses];
 phSpPtSpinProd=reempSpinProd[phSpPt];
 phSpMom=momReplacement[phSpPt];
 phSpPolVec=replacePolVecs[pol,Flatten[polVectors[phSpPt,phSpPtSpinProd]]];
-((ampOS/.phSpPtSpinProd/.phSpMom)-(ampSMEFT/.phSpPolVec/.phSpMom))
+((ampOS/.phSpPtSpinProd/.phSpPolVec/.phSpMom)-(ampSMEFT/.phSpPolVec/.phSpMom))
 ];
 
 End[];
