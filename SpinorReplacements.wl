@@ -31,9 +31,9 @@ sqPtr::usage = "[i|p|j].";
 trPsq::usage = "\:27e8i|p|j\:27e9.";
 
 (* Polarization symbols *)
-\[Epsilon]Plus::usage = "Positive helicity polarization vector.";
+(*\[Epsilon]Plus::usage = "Positive helicity polarization vector.";
 \[Epsilon]Minus::usage = "Negative helicity polarization vector.";
-\[Epsilon]0::usage = "Longitudinal polarization vector.";
+\[Epsilon]0::usage = "Longitudinal polarization vector.";*)
 
 (* Mass symbols for massive particles *)
 masP::usage = "Mass parameter for massive particle.";
@@ -53,7 +53,7 @@ generateKinematics[nF_,nV_,nS_,masses_:0]:=KinematicConfigurations[nF,nV,nS,mass
 (* ========================================================================= *)
 (* PART 2: Custom Spinor Replacement Functions                              *)
 (* ========================================================================= *)
-reempSpinProd[genKin_]:=Module[{listUs,listVBs,listPs,pR,pL,listAllParts,listMasses,listMassless,listMassive,ret,strMasP,minkoMetric},
+reempSpinProd[genKin_]:=Module[{listUs,listVBs,listPs,pR,pL,listAllParts,listMasses,listMassless,listMassive,ret,strMasP,minkoMetric,Angr,rAng,Sqr,rSq},
 minkoMetric=DiagonalMatrix[{1,-1,-1,-1}];
 listUs=genKin["u"];
 listVBs=genKin["vbar"];
@@ -185,6 +185,47 @@ listVBs[[i1]][[subi1]] . pL . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pL . listUs[[i
 ,{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2},{i3,listAllParts},{i4,listAllParts}]
 ]
 ];
+(*/// Comput product spinors with one random reference spinor. ///*)
+(*/// Define the random spinors to use. ///*);
+{Angr,rAng,Sqr,rSq}=randomSpinors[];
+(*/// Compute product spinors for one random reference and one massless spinor. ///*);
+ret=Join[ret,
+Flatten[Table[{sqBrKt[ToString[i1],"ref"]->listVBs[[i1]] . pR . rSq,sqBrKt["ref",ToString[i1]]->Sqr . pR . listUs[[i1]]},{i1,listMassless}]],
+Flatten[Table[{trBrKt[ToString[i1],"ref"]->listVBs[[i1]] . pL . rAng,trBrKt["ref",ToString[i1]]->Angr . pL . listUs[[i1]]},{i1,listMassless}]]
+];
+(*/// Compute [p|q], <p|q>, [q|p], <q|p> with p=random reference and q massive.///*)
+ret=Join[ret,
+Flatten[Table[{trBrKt["ref",ToString[i2][subi2]]->Angr . pL . listUs[[i2]][[subi2]],trBrKt[ToString[i2][subi2],"ref"]->
+listVBs[[i2]][[subi2]] . pL . rAng
+},{i2,listMassive},{subi2,1,2}]],
+Flatten[Table[{sqBrKt["ref",ToString[i2][subi2]]->Sqr . pR . listUs[[i2]][[subi2]],sqBrKt[ToString[i2][subi2],"ref"]->
+listVBs[[i2]][[subi2]] . pR . rSq
+},{i2,listMassive},{subi2,1,2}]]
+];
+(*/// Compute <p|K|q] and <q|K|p] for p=random reference spinor, massive q, and general on-shell K. ///*)
+ret=Join[ret,
+Flatten[Table[
+trPsq["ref",strMasP[i3],ToString[i2][subi2]]->Simplify[MDot[listPs[[i3]],
+Table[Angr . pL . gammas[[jj]] . pR . listUs[[i2]][[subi2]],{jj,1,4}]]]
+,{i2,listMassive},{subi2,1,2},{i3,listAllParts}]],
+Flatten[Table[
+sqPtr["ref",strMasP[i3],ToString[i2][subi2]]->Simplify[MDot[listPs[[i3]],
+Table[Sqr . pR . gammas[[jj]] . pL . listUs[[i2]][[subi2]],{jj,1,4}]]],{i2,listMassive},{subi2,1,2},{i3,listAllParts}]
+],
+Flatten[Table[
+trPsq[ToString[i1][subi1],strMasP[i3],"ref"]->Simplify[MDot[listPs[[i3]],
+Table[listVBs[[i1]][[subi1]] . pL . gammas[[jj]] . pR . rSq,{jj,1,4}]]]
+,{i1,listMassive},{subi1,1,2},{i3,listAllParts}]],
+Flatten[Table[
+sqPtr[ToString[i1][subi1],strMasP[i3],"ref"]->Simplify[MDot[listPs[[i3]],
+Table[listVBs[[i1]][[subi1]] . pR . gammas[[jj]] . pL . rAng,{jj,1,4}]]],{i1,listMassive},{subi1,1,2},{i3,listAllParts}]]
+];
+(*/// Compute <p|K|p] for p=random reference spinor, and general on-shell K. ///*)
+ret=Join[ret,
+Flatten[Table[
+trPsq["ref",strMasP[i3],"ref"]->Simplify[MDot[listPs[[i3]],
+Table[Angr . pL . gammas[[jj]] . pR . rSq,{jj,1,4}]]]
+,{i3,listAllParts}]]];
 ret
 ];
 randomSpinors[]:=Block[
@@ -199,7 +240,6 @@ Angr=Join[Angr,{0,0}];
 Sqr=Join[{0,0},Sqr];
 {Angr,rAng,Sqr,rSq}
 ];
-
 polVectors[kinConfigs_,reempSpinors_]:=Module[
 {listVectors,listMassiveVectors,pL,pR,listMasslessVectors,refSpinorMom,ret,Angr,rAng,Sqr,rSq,retM0,
 funcPolMassive,funcPolLight},
