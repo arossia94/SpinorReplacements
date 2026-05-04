@@ -129,8 +129,7 @@ Flatten[Table[
 listVBs[[i1]] . pR . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pR . listUs[[i2]],{\[Mu],1,4},{\[Nu],1,4}]],
 trPPtr[ToString[i1],strMasP[i3],strMasP[i4],ToString[i2]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
 listVBs[[i1]] . pL . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pL . listUs[[i2]],{\[Mu],1,4},{\[Nu],1,4}]]}
-,{i1,listMassless},{i2,listMassless},{i3,listAllParts},{i4,listAllParts}]],
-];
+,{i1,listMassless},{i2,listMassless},{i3,listAllParts},{i4,listAllParts}]]];
 (*/// Compute [p|K L |q] and <p| K L | q> for massless p, massive q and on-shell K, L. ///*)
 ret=Join[ret,
 Flatten[Table[{
