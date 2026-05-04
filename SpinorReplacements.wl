@@ -68,90 +68,68 @@ listMassless=Position[listMasses,0]//Flatten;
 listMassive=Complement[listAllParts,listMassless];
 strMasP[j_]:=Piecewise[{{masP[ToString[j]],MemberQ[listMassive,j]}},ToString[j]];
 (*/// Compute massless product spinors for massless momenta. ///*);
-ret=Join[DeleteCases[Flatten[Table[If[i1!=i2,sqBrKt[ToString[i1],ToString[i2]]->listVBs[[i1]] . pR . listUs[[i2]],"0"],{i1,listMassless},{i2,listMassless}]],a_/;a==="0"],
-DeleteCases[Flatten[Table[If[i1!=i2,trBrKt[ToString[i1],ToString[i2]]->listVBs[[i1]] . pL . listUs[[i2]],"0"],{i1,listMassless},{i2,listMassless}]],a_/;a==="0"]
-];
+ret=DeleteCases[Flatten[Table[If[i1!=i2,{sqBrKt[ToString[i1],ToString[i2]]->listVBs[[i1]] . pR . listUs[[i2]],trBrKt[ToString[i1],ToString[i2]]->listVBs[[i1]] . pL . listUs[[i2]]},"0"],{i1,listMassless},{i2,listMassless}]],a_/;a==="0"];
 (*/// Compute [p|q], <p|q>, [q|p], <q|p> with p massless and q massive.///*)
 ret=Join[ret,
 Flatten[Table[{trBrKt[ToString[i1],ToString[i2][subi2]]->listVBs[[i1]] . pL . listUs[[i2]][[subi2]],trBrKt[ToString[i2][subi2],ToString[i1]]->
-listVBs[[i2]][[subi2]] . pL . listUs[[i1]]
-},{i1,listMassless},{i2,listMassive},{subi2,1,2}]],
-Flatten[Table[{sqBrKt[ToString[i1],ToString[i2][subi2]]->listVBs[[i1]] . pR . listUs[[i2]][[subi2]],sqBrKt[ToString[i2][subi2],ToString[i1]]->
-listVBs[[i2]][[subi2]] . pR . listUs[[i1]]
-},{i1,listMassless},{i2,listMassive},{subi2,1,2}]]
-];
+listVBs[[i2]][[subi2]] . pL . listUs[[i1]], sqBrKt[ToString[i1],ToString[i2][subi2]]->listVBs[[i1]] . pR . listUs[[i2]][[subi2]], sqBrKt[ToString[i2][subi2],ToString[i1]]->
+listVBs[[i2]][[subi2]] . pR . listUs[[i1]]},{i1,listMassless},{i2,listMassive},{subi2,1,2}]]];
 (*/// Compute [p|q], <p|q>, [q|p], <q|p> with p and q massive.///*)
 ret=Join[ret,
-Flatten[Table[trBrKt[ToString[i1][subi1],ToString[i2][subi2]]->Simplify[listVBs[[i1]][[subi1]] . pL . listUs[[i2]][[subi2]]],{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2}]],
-Flatten[Table[sqBrKt[ToString[i1][subi1],ToString[i2][subi2]]->Simplify[listVBs[[i1]][[subi1]] . pR . listUs[[i2]][[subi2]]],{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2}]]
-];
+Flatten[Table[{trBrKt[ToString[i1][subi1],ToString[i2][subi2]]->Simplify[listVBs[[i1]][[subi1]] . pL . listUs[[i2]][[subi2]]],sqBrKt[ToString[i1][subi1],ToString[i2][subi2]]->Simplify[listVBs[[i1]][[subi1]] . pR . listUs[[i2]][[subi2]]]},{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2}]]];
 (*/// Compute <p|\[Gamma]^\[Mu]|q] and <q|\[Gamma]^\[Mu]|p] for massless momenta. ///*);
 ret=Join[ret,
-DeleteCases[Flatten[Table[If[i1!=i2,sq\[Gamma]Tr[ToString[i1],ToString[i2]]->Table[listVBs[[i1]] . pR . gammas[[jj]] . pL . listUs[[i2]],{jj,1,4}],"0"],{i1,listMassless},{i2,listMassless}]],a_/;a==="0"],
-DeleteCases[Flatten[Table[If[i1!=i2,tr\[Gamma]Sq[ToString[i1],ToString[i2]]->Table[listVBs[[i1]] . pL . gammas[[jj]] . pR . listUs[[i2]],{jj,1,4}],"0"],{i1,listMassless},{i2,listMassless}]],a_/;a==="0"]
+DeleteCases[Flatten[Table[If[i1!=i2,{sq\[Gamma]Tr[ToString[i1],ToString[i2]]->Table[listVBs[[i1]] . pR . gammas[[jj]] . pL . listUs[[i2]],{jj,1,4}],tr\[Gamma]Sq[ToString[i1],ToString[i2]]->Table[listVBs[[i1]] . pL . gammas[[jj]] . pR . listUs[[i2]],{jj,1,4}]},"0"],{i1,listMassless},{i2,listMassless}]],a_/;a==="0"]
 ];
 (*/// Compute <p|\[Gamma]^\[Mu]|q] and <q|\[Gamma]^\[Mu]|p] for q massive and p massless. ///*)
 ret=Join[ret,
-Flatten[Table[sq\[Gamma]Tr[ToString[i1],ToString[i2][subi2]]->Table[listVBs[[i1]] . pR . gammas[[jj]] . pL . listUs[[i2]][[subi2]],{jj,1,4}],{i1,listMassless},{i2,listMassive},{subi2,1,2}]],
-Flatten[Table[tr\[Gamma]Sq[ToString[i1],ToString[i2][subi2]]->Table[listVBs[[i1]] . pL . gammas[[jj]] . pR . listUs[[i2]][[subi2]],{jj,1,4}],{i1,listMassless},{i2,listMassive},{subi2,1,2}]],
-Flatten[Table[tr\[Gamma]Sq[ToString[i1][subi1],ToString[i2]]->Table[listVBs[[i1]][[subi1]] . pL . gammas[[jj]] . pR . listUs[[i2]],{jj,1,4}],{i1,listMassive},{i2,listMassless},{subi1,1,2}]],
-Flatten[Table[sq\[Gamma]Tr[ToString[i1][subi1],ToString[i2]]->Table[listVBs[[i1]][[subi1]] . pR . gammas[[jj]] . pL . listUs[[i2]],{jj,1,4}],{i1,listMassive},{i2,listMassless},{subi1,1,2}]]
+Flatten[Table[{sq\[Gamma]Tr[ToString[i1],ToString[i2][subi2]]->Table[listVBs[[i1]] . pR . gammas[[jj]] . pL . listUs[[i2]][[subi2]],{jj,1,4}],tr\[Gamma]Sq[ToString[i1],ToString[i2][subi2]]->Table[listVBs[[i1]] . pL . gammas[[jj]] . pR . listUs[[i2]][[subi2]],{jj,1,4}]},{i1,listMassless},{i2,listMassive},{subi2,1,2}]],
+Flatten[Table[{tr\[Gamma]Sq[ToString[i1][subi1],ToString[i2]]->Table[listVBs[[i1]][[subi1]] . pL . gammas[[jj]] . pR . listUs[[i2]],{jj,1,4}],sq\[Gamma]Tr[ToString[i1][subi1],ToString[i2]]->Table[listVBs[[i1]][[subi1]] . pR . gammas[[jj]] . pL . listUs[[i2]],{jj,1,4}]},{i1,listMassive},{i2,listMassless},{subi1,1,2}]]
 ];
 (*/// Compute <p|\[Gamma]^\[Mu]|q] and <q|\[Gamma]^\[Mu]|p] for q and p massive. ///*)
 ret=Join[ret,
-Flatten[Table[sq\[Gamma]Tr[ToString[i1][subi1],ToString[i2][subi2]]->Table[listVBs[[i1]][[subi1]] . pR . gammas[[jj]] . pL . listUs[[i2]][[subi2]],{jj,1,4}],{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2}]],
-Flatten[Table[tr\[Gamma]Sq[ToString[i1][subi1],ToString[i2][subi2]]->Table[listVBs[[i1]][[subi1]] . pL . gammas[[jj]] . pR . listUs[[i2]][[subi2]],{jj,1,4}],{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2}]]
+Flatten[Table[{sq\[Gamma]Tr[ToString[i1][subi1],ToString[i2][subi2]]->Table[listVBs[[i1]][[subi1]] . pR . gammas[[jj]] . pL . listUs[[i2]][[subi2]],{jj,1,4}],tr\[Gamma]Sq[ToString[i1][subi1],ToString[i2][subi2]]->Table[listVBs[[i1]][[subi1]] . pL . gammas[[jj]] . pR . listUs[[i2]][[subi2]],{jj,1,4}]},{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2}]]
 ];
 (*/// Compute <p|K|q] and <q|K|p] for massless p,q and general on-shell K. ///*)
 ret=Join[ret,
-Flatten[Table[
+Flatten[Table[{
 trPsq[ToString[i1],strMasP[i3],ToString[i2]]->Simplify[MDot[listPs[[i3]],
-Table[listVBs[[i1]] . pL . gammas[[jj]] . pR . listUs[[i2]],{jj,1,4}]]]
-,{i1,listMassless},{i2,listMassless},{i3,listAllParts}]
-],
-Flatten[Table[
+Table[listVBs[[i1]] . pL . gammas[[jj]] . pR . listUs[[i2]],{jj,1,4}]]],
 sqPtr[ToString[i1],strMasP[i3],ToString[i2]]->Simplify[MDot[listPs[[i3]],
 Table[listVBs[[i1]] . pR . gammas[[jj]] . pL . listUs[[i2]],{jj,1,4}]]]
-,{i1,listMassless},{i2,listMassless},{i3,listAllParts}]]
-];
+}
+,{i1,listMassless},{i2,listMassless},{i3,listAllParts}]
+]];
 (*/// Compute <p|K|q] and <q|K|p] for massless p, massive q and general on-shell K. ///*)
 ret=Join[ret,
 Flatten[Table[
 {trPsq[ToString[i1],strMasP[i3],ToString[i2][subi2]]->Simplify[MDot[listPs[[i3]],
 Table[listVBs[[i1]] . pL . gammas[[jj]] . pR . listUs[[i2]][[subi2]],{jj,1,4}]]],
 trPsq[ToString[i2][subi2],strMasP[i3],ToString[i1]]->Simplify[MDot[listPs[[i3]],
-Table[listVBs[[i2]][[subi2]] . pL . gammas[[jj]] . pR . listUs[[i1]],{jj,1,4}]]]
-},{i1,listMassless},{i2,listMassive},{subi2,1,2},{i3,listAllParts}]
-],
-Flatten[Table[
-{sqPtr[ToString[i1],strMasP[i3],ToString[i2][subi2]]->Simplify[MDot[listPs[[i3]],
+Table[listVBs[[i2]][[subi2]] . pL . gammas[[jj]] . pR . listUs[[i1]],{jj,1,4}]]],
+sqPtr[ToString[i1],strMasP[i3],ToString[i2][subi2]]->Simplify[MDot[listPs[[i3]],
 Table[listVBs[[i1]] . pR . gammas[[jj]] . pL . listUs[[i2]][[subi2]],{jj,1,4}]]],
 sqPtr[ToString[i2][subi2],strMasP[i3],ToString[i1]]->Simplify[MDot[listPs[[i3]],
 Table[listVBs[[i2]][[subi2]] . pR . gammas[[jj]] . pL . listUs[[i1]],{jj,1,4}]]]
 },{i1,listMassless},{i2,listMassive},{subi2,1,2},{i3,listAllParts}]
-]
-];
+]];
 (*/// Compute <p|K|q] and <q|K|p] for massive p and q and general on-shell K. ///*)
 ret=Join[ret,
-Flatten[Table[
+Flatten[Table[{
 trPsq[ToString[i1][subi1],strMasP[i3],ToString[i2][subi2]]->Simplify[MDot[listPs[[i3]],
-Table[listVBs[[i1]][[subi1]] . pL . gammas[[jj]] . pR . listUs[[i2]][[subi2]],{jj,1,4}]]]
-,{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2},{i3,listAllParts}]],
-Flatten[Table[
+Table[listVBs[[i1]][[subi1]] . pL . gammas[[jj]] . pR . listUs[[i2]][[subi2]],{jj,1,4}]]],
 sqPtr[ToString[i1][subi1],strMasP[i3],ToString[i2][subi2]]->Simplify[MDot[listPs[[i3]],
-Table[listVBs[[i1]][[subi1]] . pR . gammas[[jj]] . pL . listUs[[i2]][[subi2]],{jj,1,4}]]],{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2},{i3,listAllParts}]
-]
+Table[listVBs[[i1]][[subi1]] . pR . gammas[[jj]] . pL . listUs[[i2]][[subi2]],{jj,1,4}]]]}
+,{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2},{i3,listAllParts}]]
 ];
 (*/// Compute [p|K L |q] and <p| K L | q> for massless p,q and on-shell K, L. ///*)
 ret=Join[ret,
 Flatten[Table[
-sqPPsq[ToString[i1],strMasP[i3],strMasP[i4],ToString[i2]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
-listVBs[[i1]] . pR . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pR . listUs[[i2]],{\[Mu],1,4},{\[Nu],1,4}]]
-,{i1,listMassless},{i2,listMassless},{i3,listAllParts},{i4,listAllParts}]],
-Flatten[Table[
+{sqPPsq[ToString[i1],strMasP[i3],strMasP[i4],ToString[i2]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
+listVBs[[i1]] . pR . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pR . listUs[[i2]],{\[Mu],1,4},{\[Nu],1,4}]],
 trPPtr[ToString[i1],strMasP[i3],strMasP[i4],ToString[i2]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
-listVBs[[i1]] . pL . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pL . listUs[[i2]],{\[Mu],1,4},{\[Nu],1,4}]]
-,{i1,listMassless},{i2,listMassless},{i3,listAllParts},{i4,listAllParts}]]
+listVBs[[i1]] . pL . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pL . listUs[[i2]],{\[Mu],1,4},{\[Nu],1,4}]]}
+,{i1,listMassless},{i2,listMassless},{i3,listAllParts},{i4,listAllParts}]],
 ];
 (*/// Compute [p|K L |q] and <p| K L | q> for massless p, massive q and on-shell K, L. ///*)
 ret=Join[ret,
@@ -159,66 +137,51 @@ Flatten[Table[{
 sqPPsq[ToString[i1],strMasP[i3],strMasP[i4],ToString[i2][subi2]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
 listVBs[[i1]] . pR . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pR . listUs[[i2]][[subi2]],{\[Mu],1,4},{\[Nu],1,4}]],
 sqPPsq[ToString[i2][subi2],strMasP[i3],strMasP[i4],ToString[i1]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
-listVBs[[i2]][[subi2]] . pR . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pR . listUs[[i1]],{\[Mu],1,4},{\[Nu],1,4}]]
-}
-,{i1,listMassless},{i2,listMassive},{subi2,1,2},{i3,listAllParts},{i4,listAllParts}]
-],
-Flatten[Table[
-{trPPtr[ToString[i1],strMasP[i3],strMasP[i4],ToString[i2][subi2]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
+listVBs[[i2]][[subi2]] . pR . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pR . listUs[[i1]],{\[Mu],1,4},{\[Nu],1,4}]],
+trPPtr[ToString[i1],strMasP[i3],strMasP[i4],ToString[i2][subi2]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
 listVBs[[i1]] . pL . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pL . listUs[[i2]][[subi2]],{\[Mu],1,4},{\[Nu],1,4}]],
 trPPtr[ToString[i2][subi2],strMasP[i3],strMasP[i4],ToString[i1]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
-listVBs[[i2]][[subi2]] . pL . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pL . listUs[[i1]],{\[Mu],1,4},{\[Nu],1,4}]]
-}
-,{i1,listMassless},{i2,listMassive},{subi2,1,2},{i3,listAllParts},{i4,listAllParts}]
-]
-];
+listVBs[[i2]][[subi2]] . pL . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pL . listUs[[i1]],{\[Mu],1,4},{\[Nu],1,4}]]},
+{i1,listMassless},{i2,listMassive},{subi2,1,2},{i3,listAllParts},{i4,listAllParts}]
+]];
 (*/// Compute [p|K L |q] and <p| K L | q> for massive p and q, and on-shell K, L. ///*)
 ret=Join[ret,
 Flatten[Table[
-sqPPsq[ToString[i1][subi1],strMasP[i3],strMasP[i4],ToString[i2][subi2]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
-listVBs[[i1]][[subi1]] . pR . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pR . listUs[[i2]][[subi2]],{\[Mu],1,4},{\[Nu],1,4}]]
-,{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2},{i3,listAllParts},{i4,listAllParts}]
-],
-Flatten[Table[
+{sqPPsq[ToString[i1][subi1],strMasP[i3],strMasP[i4],ToString[i2][subi2]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
+listVBs[[i1]][[subi1]] . pR . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pR . listUs[[i2]][[subi2]],{\[Mu],1,4},{\[Nu],1,4}]],
 trPPtr[ToString[i1][subi1],strMasP[i3],strMasP[i4],ToString[i2][subi2]]->Simplify[Sum[minkoMetric[[\[Mu],\[Mu]]]*minkoMetric[[\[Nu],\[Nu]]]*listPs[[i3]][[\[Mu]]]*listPs[[i4]][[\[Nu]]]*
-listVBs[[i1]][[subi1]] . pL . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pL . listUs[[i2]][[subi2]],{\[Mu],1,4},{\[Nu],1,4}]]
-,{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2},{i3,listAllParts},{i4,listAllParts}]
-]
+listVBs[[i1]][[subi1]] . pL . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pL . listUs[[i2]][[subi2]],{\[Mu],1,4},{\[Nu],1,4}]]}
+,{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2},{i3,listAllParts},{i4,listAllParts}]]
 ];
 (*/// Comput product spinors with one random reference spinor. ///*)
 (*/// Define the random spinors to use. ///*);
 {Angr,rAng,Sqr,rSq}=randomSpinors[];
 (*/// Compute product spinors for one random reference and one massless spinor. ///*);
 ret=Join[ret,
-Flatten[Table[{sqBrKt[ToString[i1],"ref"]->listVBs[[i1]] . pR . rSq,sqBrKt["ref",ToString[i1]]->Sqr . pR . listUs[[i1]]},{i1,listMassless}]],
-Flatten[Table[{trBrKt[ToString[i1],"ref"]->listVBs[[i1]] . pL . rAng,trBrKt["ref",ToString[i1]]->Angr . pL . listUs[[i1]]},{i1,listMassless}]]
-];
+Flatten[Table[{sqBrKt[ToString[i1],"ref"]->listVBs[[i1]] . pR . rSq,sqBrKt["ref",ToString[i1]]->Sqr . pR . listUs[[i1]],trBrKt[ToString[i1],"ref"]->listVBs[[i1]] . pL . rAng,trBrKt["ref",ToString[i1]]->Angr . pL . listUs[[i1]]},{i1,listMassless}]]];
 (*/// Compute [p|q], <p|q>, [q|p], <q|p> with p=random reference and q massive.///*)
 ret=Join[ret,
 Flatten[Table[{trBrKt["ref",ToString[i2][subi2]]->Angr . pL . listUs[[i2]][[subi2]],trBrKt[ToString[i2][subi2],"ref"]->
-listVBs[[i2]][[subi2]] . pL . rAng
-},{i2,listMassive},{subi2,1,2}]],
-Flatten[Table[{sqBrKt["ref",ToString[i2][subi2]]->Sqr . pR . listUs[[i2]][[subi2]],sqBrKt[ToString[i2][subi2],"ref"]->
-listVBs[[i2]][[subi2]] . pR . rSq
-},{i2,listMassive},{subi2,1,2}]]
+listVBs[[i2]][[subi2]] . pL . rAng,
+sqBrKt["ref",ToString[i2][subi2]]->Sqr . pR . listUs[[i2]][[subi2]],sqBrKt[ToString[i2][subi2],"ref"]->
+listVBs[[i2]][[subi2]] . pR . rSq},
+{i2,listMassive},{subi2,1,2}]]
 ];
 (*/// Compute <p|K|q] and <q|K|p] for p=random reference spinor, massive q, and general on-shell K. ///*)
 ret=Join[ret,
-Flatten[Table[
+Flatten[Table[{
 trPsq["ref",strMasP[i3],ToString[i2][subi2]]->Simplify[MDot[listPs[[i3]],
-Table[Angr . pL . gammas[[jj]] . pR . listUs[[i2]][[subi2]],{jj,1,4}]]]
-,{i2,listMassive},{subi2,1,2},{i3,listAllParts}]],
-Flatten[Table[
+Table[Angr . pL . gammas[[jj]] . pR . listUs[[i2]][[subi2]],{jj,1,4}]]],
 sqPtr["ref",strMasP[i3],ToString[i2][subi2]]->Simplify[MDot[listPs[[i3]],
-Table[Sqr . pR . gammas[[jj]] . pL . listUs[[i2]][[subi2]],{jj,1,4}]]],{i2,listMassive},{subi2,1,2},{i3,listAllParts}]
-],
-Flatten[Table[
+Table[Sqr . pR . gammas[[jj]] . pL . listUs[[i2]][[subi2]],{jj,1,4}]]]
+},
+{i2,listMassive},{subi2,1,2},{i3,listAllParts}]],
+Flatten[Table[{
 trPsq[ToString[i1][subi1],strMasP[i3],"ref"]->Simplify[MDot[listPs[[i3]],
-Table[listVBs[[i1]][[subi1]] . pL . gammas[[jj]] . pR . rSq,{jj,1,4}]]]
-,{i1,listMassive},{subi1,1,2},{i3,listAllParts}]],
-Flatten[Table[
+Table[listVBs[[i1]][[subi1]] . pL . gammas[[jj]] . pR . rSq,{jj,1,4}]]],
 sqPtr[ToString[i1][subi1],strMasP[i3],"ref"]->Simplify[MDot[listPs[[i3]],
-Table[listVBs[[i1]][[subi1]] . pR . gammas[[jj]] . pL . rAng,{jj,1,4}]]],{i1,listMassive},{subi1,1,2},{i3,listAllParts}]]
+Table[listVBs[[i1]][[subi1]] . pR . gammas[[jj]] . pL . rAng,{jj,1,4}]]]}
+,{i1,listMassive},{subi1,1,2},{i3,listAllParts}]]
 ];
 (*/// Compute <p|K|p] for p=random reference spinor, and general on-shell K. ///*)
 ret=Join[ret,
@@ -253,7 +216,9 @@ listMassiveVectors=Complement[listVectors,listMasslessVectors];
 funcPolLight[jj_]:={\[Epsilon]Plus[jj]->(Table[Angr . pL . gammas[[kk]] . pR . kinConfigs["u"][[jj]],{kk,1,4}])/(Sqrt[2]*kinConfigs["vbar"][[jj]] . pL . rAng),
 \[Epsilon]Minus[jj]->(Table[kinConfigs["vbar"][[jj]] . pL . gammas[[kk]] . pR . rSq,{kk,1,4}])/(Sqrt[2]*kinConfigs["vbar"][[jj]] . pR . rSq)
 };
-funcPolMassive[jj_]:={\[Epsilon]Plus[jj]->(tr\[Gamma]Sq[ToString[jj][1],ToString[jj][1]]/(Sqrt[2]Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]]))/.reempSpinors,\[Epsilon]Minus[jj]->(tr\[Gamma]Sq[ToString[jj][2],ToString[jj][2]]/(Sqrt[2]Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]]))/.reempSpinors,\[Epsilon]0[jj]->(tr\[Gamma]Sq[ToString[jj][1],ToString[jj][2]]/(2Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]])+tr\[Gamma]Sq[ToString[jj][2],ToString[jj][1]]/(2Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]]))/.reempSpinors};
+funcPolMassive[jj_]:={\[Epsilon]Plus[jj]->(tr\[Gamma]Sq[ToString[jj][1],ToString[jj][1]]/(Sqrt[2]Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]]))/.reempSpinors,
+\[Epsilon]Minus[jj]->(tr\[Gamma]Sq[ToString[jj][2],ToString[jj][2]]/(Sqrt[2]Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]]))/.reempSpinors,
+\[Epsilon]0[jj]->(tr\[Gamma]Sq[ToString[jj][1],ToString[jj][2]]/(2Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]])+tr\[Gamma]Sq[ToString[jj][2],ToString[jj][1]]/(2Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]]))/.reempSpinors};
 ret=Table[If[MemberQ[listMassiveVectors,jj],funcPolMassive[jj],funcPolLight[jj]],{jj,listVectors}];
 ret
 ];
