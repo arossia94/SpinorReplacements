@@ -216,13 +216,13 @@ listMasslessVectors=Select[listVectors,(Simplify[MDot[kinConfigs["p"][[#]],kinCo
 listMassiveVectors=Complement[listVectors,listMasslessVectors];
 (*/// Random Reference spinors. ///*)
 {Angr,rAng,Sqr,rSq}=randomSpinors[];
-funcPolLight[jj_]:={\[Epsilon]Plus[jj]->kinConfigs["e+"][[jj]],
-\[Epsilon]Minus[jj]->kinConfigs["e-"][[jj]]};
+(*funcPolLight[jj_]:={\[Epsilon]Plus[jj]->kinConfigs["e+"][[jj]],
+\[Epsilon]Minus[jj]->kinConfigs["e-"][[jj]]};*)
 (*funcPolLight[jj_]:={\[Epsilon]Plus[jj]->({(k[1]-\[ImaginaryI] k[3])/(Sqrt[2] (k[0]+k[2])),1/Sqrt[2],-((k[1]-\[ImaginaryI] k[3])/(Sqrt[2] (k[0]+k[2]))),-(\[ImaginaryI]/Sqrt[2])})/.{k[0]->(kinConfigs["p"][[jj]])[[1]],k[1]->(kinConfigs["p"][[jj]])[[2]],k[2]->(kinConfigs["p"][[jj]])[[3]],k[3]->(kinConfigs["p"][[jj]])[[4]]},
 \[Epsilon]Minus[jj]->({-((k[1]+\[ImaginaryI] k[3])/(Sqrt[2] (k[0]+k[2]))),-(1/Sqrt[2]),(k[1]+\[ImaginaryI] k[3])/(Sqrt[2] (k[0]+k[2])),-(\[ImaginaryI]/Sqrt[2])})/.{k[0]->(kinConfigs["p"][[jj]])[[1]],k[1]->(kinConfigs["p"][[jj]])[[2]],k[2]->(kinConfigs["p"][[jj]])[[3]],k[3]->(kinConfigs["p"][[jj]])[[4]]}};
-*)(*funcPolLight[jj_]:={\[Epsilon]Plus[jj]->(Table[Angr . pL . gammas[[kk]] . pR . kinConfigs["u"][[jj]],{kk,1,4}])/(Sqrt[2]*kinConfigs["vbar"][[jj]] . pL . rAng),
-\[Epsilon]Minus[jj]->(Table[kinConfigs["vbar"][[jj]] . pL . gammas[[kk]] . pR . rSq,{kk,1,4}])/(Sqrt[2]*kinConfigs["vbar"][[jj]] . pR . rSq)
-};*)
+*)
+funcPolLight[jj_]:={\[Epsilon]Plus[jj]->(Table[Angr . pL . gammas[[kk]] . pR . kinConfigs["u"][[jj]],{kk,1,4}])/(Sqrt[2]*kinConfigs["vbar"][[jj]] . pL . rAng),
+\[Epsilon]Minus[jj]->(Table[kinConfigs["vbar"][[jj]] . pL . gammas[[kk]] . pR . rSq,{kk,1,4}])/(Sqrt[2]*kinConfigs["vbar"][[jj]] . pR . rSq)};
 funcPolMassive[jj_]:={\[Epsilon]Plus[jj]->(tr\[Gamma]Sq[ToString[jj][1],ToString[jj][1]]/(Sqrt[2]Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]]))/.reempSpinors,
 \[Epsilon]Minus[jj]->(tr\[Gamma]Sq[ToString[jj][2],ToString[jj][2]]/(Sqrt[2]Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]]))/.reempSpinors,
 \[Epsilon]0[jj]->(tr\[Gamma]Sq[ToString[jj][1],ToString[jj][2]]/(2 Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]])+tr\[Gamma]Sq[ToString[jj][2],ToString[jj][1]]/(2 Sqrt[FullSimplify[MDot[kinConfigs["p"][[jj]],kinConfigs["p"][[jj]]]]]))/.reempSpinors};
