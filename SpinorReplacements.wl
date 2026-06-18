@@ -197,8 +197,8 @@ ret
 randomSpinors[]:=Block[
 {ri=RandomInteger[{-10^3,10^3},4],rAng,Angr,rSq,Sqr},
 {rAng,rSq}=Partition[ri*ri,2];
-Angr=-I*rAng . (PauliMatrix[2]); (*/// I should carefully check these conversions. ///*)
-Sqr=I*rSq . PauliMatrix[2];
+Angr=I*rAng . (PauliMatrix[2]); (*/// I should carefully check these conversions. ///*)
+Sqr=-I*rSq . PauliMatrix[2];
 (*/// Extend to 4D spinors. ///*)
 rAng=Join[rAng,{0,0}];
 rSq=Join[{0,0},rSq];
