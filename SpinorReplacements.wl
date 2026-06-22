@@ -7,8 +7,8 @@
 
 BeginPackage["SpinorReplacements`"];
 Print["SpinorReplacements: numerical evaluation of massive and massless helicity spinors.\n"];
-Print["Version: 0.1"];
-Print["Date: 06/05/2026"];
+Print["Version: 0.15"];
+Print["Date: 22/06/2026"];
 Print["Author: Alejo N. Rossia"];
 Print["Affiliations: Universita di Padova"];
 (* Load the external packages needed *)
