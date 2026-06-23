@@ -55,9 +55,9 @@ generateKinematics[nF_,nV_,nS_,masses_:0]:=KinematicConfigurations[nF,nV,nS,mass
 
 
 (* ========================================================================= *)
-(* PART 2: Custom Spinor Replacement Functions                              *)
+(* PART 2: Custom Spinor Replacement Functions                               *)
 (* ========================================================================= *)
-reempSpinProd[genKin_]:=Module[{listUs,listVBs,listPs,pR,pL,listAllParts,listMasses,listMassless,listMassive,ret,strMasP,minkoMetric,Angr,rAng,Sqr,rSq},
+reempSpinProd[genKin_,rndSpinors_:randomSpinors[]]:=Module[{listUs,listVBs,listPs,pR,pL,listAllParts,listMasses,listMassless,listMassive,ret,strMasP,minkoMetric,Angr,rAng,Sqr,rSq},
 minkoMetric=DiagonalMatrix[{1,-1,-1,-1}];
 listUs=genKin["u"];
 listVBs=genKin["vbar"];
@@ -158,7 +158,7 @@ listVBs[[i1]][[subi1]] . pL . gammas[[\[Mu]]] . gammas[[\[Nu]]] . pL . listUs[[i
 ];
 (*/// Comput product spinors with one random reference spinor. ///*)
 (*/// Define the random spinors to use. ///*);
-{Angr,rAng,Sqr,rSq}=randomSpinors[];
+{Angr,rAng,Sqr,rSq}=rndSpinors;
 (*/// Compute product spinors for one random reference and one massless spinor. ///*);
 ret=Join[ret,
 Flatten[Table[{sqBrKt[ToString[i1],"ref"]->listVBs[[i1]] . pR . rSq,sqBrKt["ref",ToString[i1]]->Sqr . pR . listUs[[i1]],trBrKt[ToString[i1],"ref"]->listVBs[[i1]] . pL . rAng,trBrKt["ref",ToString[i1]]->Angr . pL . listUs[[i1]]},{i1,listMassless}]]];
@@ -197,7 +197,7 @@ ret
 randomSpinors[]:=Block[
 {ri=RandomInteger[{-10^3,10^3},4],rAng,Angr,rSq,Sqr},
 {rAng,rSq}=Partition[ri*ri,2];
-Angr=I*rAng . (PauliMatrix[2]); (*/// I should carefully check these conversions. ///*)
+Angr=I*rAng . (PauliMatrix[2]);
 Sqr=-I*rSq . PauliMatrix[2];
 (*/// Extend to 4D spinors. ///*)
 rAng=Join[rAng,{0,0}];
@@ -206,7 +206,7 @@ Angr=Join[Angr,{0,0}];
 Sqr=Join[{0,0},Sqr];
 {Angr,rAng,Sqr,rSq}
 ];
-polVectors[kinConfigs_,reempSpinors_]:=Module[
+polVectors[kinConfigs_,reempSpinors_,rndSpinors_:randomSpinors[]]:=Module[
 {listVectors,listMassiveVectors,pL,pR,listMasslessVectors,refSpinorMom,ret,Angr,rAng,Sqr,rSq,retM0,
 funcPolMassive,funcPolLight},
 listVectors=Position[Keys[kinConfigs["p"]],_?((StringContainsQ[ToString[#],"v"])&),1]//Flatten;
@@ -215,7 +215,7 @@ pL=(IdentityMatrix[4]-gamma5)/2;
 listMasslessVectors=Select[listVectors,(Simplify[MDot[kinConfigs["p"][[#]],kinConfigs["p"][[#]]]]==0)&];
 listMassiveVectors=Complement[listVectors,listMasslessVectors];
 (*/// Random Reference spinors. ///*)
-{Angr,rAng,Sqr,rSq}=randomSpinors[];
+{Angr,rAng,Sqr,rSq}=rndSpinors;
 (*funcPolLight[jj_]:={\[Epsilon]Plus[jj]->kinConfigs["e+"][[jj]],
 \[Epsilon]Minus[jj]->kinConfigs["e-"][[jj]]};*)
 (*funcPolLight[jj_]:={\[Epsilon]Plus[jj]->({(k[1]-\[ImaginaryI] k[3])/(Sqrt[2] (k[0]+k[2])),1/Sqrt[2],-((k[1]-\[ImaginaryI] k[3])/(Sqrt[2] (k[0]+k[2]))),-(\[ImaginaryI]/Sqrt[2])})/.{k[0]->(kinConfigs["p"][[jj]])[[1]],k[1]->(kinConfigs["p"][[jj]])[[2]],k[2]->(kinConfigs["p"][[jj]])[[3]],k[3]->(kinConfigs["p"][[jj]])[[4]]},
@@ -237,11 +237,13 @@ replacePolVecs[pol_,polVecEval_]:=Block[{numVecs},
 numVecs=StringLength[pol];
 Table[With[{kk=kk},RuleDelayed[ToExpression["Global`epsp"<>ToString[kk]][i_],(Piecewise[{{\[Epsilon]Plus,StringTake[pol,{kk}]=="+"},{\[Epsilon]Minus,StringTake[pol,{kk}]=="-"},{\[Epsilon]0,StringTake[pol,{kk}]=="0"}}][kk]/.polVecEval)[[i]]]],{kk,1,numVecs}]
 ];
-eqToMatch[ampOS_,ampSMEFT_,pol_,nf_,nV_,nS_,masses_:0]:=Block[{phSpPt,phSpPtSpinProd,phSpMom,phSpPolVec},
+eqToMatch[ampOS_,ampSMEFT_,pol_,nf_,nV_,nS_,masses_:0]:=Block[
+{phSpPt,phSpPtSpinProd,phSpMom,phSpPolVec,rndSpinorSet},
+rndSpinorSet=randomSpinors[];
 phSpPt=generateKinematics[nf,nV,nS,masses];
-phSpPtSpinProd=reempSpinProd[phSpPt];
+phSpPtSpinProd=reempSpinProd[phSpPt,rndSpinorSet];
 phSpMom=momReplacement[phSpPt];
-phSpPolVec=replacePolVecs[pol,Flatten[polVectors[phSpPt,phSpPtSpinProd]]];
+phSpPolVec=replacePolVecs[pol,Flatten[polVectors[phSpPt,phSpPtSpinProd,rndSpinorSet]]];
 ((ampOS/.phSpPtSpinProd/.phSpPolVec/.phSpMom)-(ampSMEFT/.phSpPolVec/.phSpMom))
 ];
 End[];
