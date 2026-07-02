@@ -7,13 +7,12 @@
 
 BeginPackage["SpinorReplacements`"];
 Print["SpinorReplacements: numerical evaluation of massive and massless helicity spinors.\n"];
-Print["Version: 0.15"];
-Print["Date: 22/06/2026"];
+Print["Version: 0.17"];
+Print["Date: 2/07/2026"];
 Print["Author: Alejo N. Rossia"];
 Print["Affiliations: Universita di Padova"];
 (* Load the external packages needed *)
-$ContextPath = Join[{"SpinorReplacements`","ExternalPackages`KinematicSubstitution`"}, $ContextPath];
-
+$ContextPath = Join[{"SpinorReplacements`"}, $ContextPath];
 (* Public function declarations for custom spinor functions *)
 generateKinematics::usage = "generateKinematics[nF,nV,nS,{m1,...,mN}] generates a kinematics phase space point. It is the 
 moniker for a modified version of the original KinematicConfigurations of the mosca package."
@@ -83,7 +82,7 @@ ret=Join[ret,
 Flatten[Table[{trBrKt[ToString[i1][subi1],ToString[i2][subi2]]->Simplify[listVBs[[i1]][[subi1]] . pL . listUs[[i2]][[subi2]]],sqBrKt[ToString[i1][subi1],ToString[i2][subi2]]->Simplify[listVBs[[i1]][[subi1]] . pR . listUs[[i2]][[subi2]]]},{i1,listMassive},{i2,listMassive},{subi1,1,2},{subi2,1,2}]]];
 (*/// Compute <p|\[Gamma]^\[Mu]|q] and <q|\[Gamma]^\[Mu]|p] for massless momenta. ///*);
 ret=Join[ret,
-DeleteCases[Flatten[Table[If[i1!=i2,{sq\[Gamma]Tr[ToString[i1],ToString[i2]]->Table[listVBs[[i1]] . pR . gammas[[jj]] . pL . listUs[[i2]],{jj,1,4}],tr\[Gamma]Sq[ToString[i1],ToString[i2]]->Table[listVBs[[i1]] . pL . gammas[[jj]] . pR . listUs[[i2]],{jj,1,4}]},"0"],{i1,listMassless},{i2,listMassless}]],a_/;a==="0"]
+Flatten[Table[{sq\[Gamma]Tr[ToString[i1],ToString[i2]]->Table[listVBs[[i1]] . pR . gammas[[jj]] . pL . listUs[[i2]],{jj,1,4}],tr\[Gamma]Sq[ToString[i1],ToString[i2]]->Table[listVBs[[i1]] . pL . gammas[[jj]] . pR . listUs[[i2]],{jj,1,4}]},{i1,listMassless},{i2,listMassless}]]
 ];
 (*/// Compute <p|\[Gamma]^\[Mu]|q] and <q|\[Gamma]^\[Mu]|p] for q massive and p massless. ///*)
 ret=Join[ret,
@@ -233,9 +232,10 @@ listPs=kinConfigs["p"];
 numPart=Length[listPs];
 ret=Flatten[Table[ToExpression["p"<>ToString[ii]][jj]->listPs[[ii,jj]],{ii,1,numPart},{jj,1,4}]]
 ];
-replacePolVecs[pol_,polVecEval_]:=Block[{numVecs},
+replacePolVecs[pol_,polVecEval_]:=Block[{numVecs,numFerms},
 numVecs=StringLength[pol];
-Table[With[{kk=kk},RuleDelayed[ToExpression["Global`epsp"<>ToString[kk]][i_],(Piecewise[{{\[Epsilon]Plus,StringTake[pol,{kk}]=="+"},{\[Epsilon]Minus,StringTake[pol,{kk}]=="-"},{\[Epsilon]0,StringTake[pol,{kk}]=="0"}}][kk]/.polVecEval)[[i]]]],{kk,1,numVecs}]
+numFerms=polVecEval[[1,1,1]]-1;
+Table[With[{kk=kk,g=kk+numFerms},RuleDelayed[ToExpression["Global`epsp"<>ToString[kk]][i_],(Piecewise[{{\[Epsilon]Plus,StringTake[pol,{kk}]=="+"},{\[Epsilon]Minus,StringTake[pol,{kk}]=="-"},{\[Epsilon]0,StringTake[pol,{kk}]=="0"}}][g]/.polVecEval)[[i]]]],{kk,1,numVecs}]
 ];
 eqToMatch[ampOS_,ampSMEFT_,pol_,nf_,nV_,nS_,masses_:0]:=Block[
 {phSpPt,phSpPtSpinProd,phSpMom,phSpPolVec,rndSpinorSet},
