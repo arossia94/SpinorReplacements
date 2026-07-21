@@ -24,14 +24,14 @@ replacePolVecs::usage = "replacePolVecs[pol, polVecEval] generates polarization 
 eqToMatch::usage = "eqToMatch[ampOS, ampSMEFT, pol] computes the difference between on-shell and SMEFT amplitudes.";
 
 (* Spinor bracket notation *)
-sqBrKt::usage = "Square spinor bracket [i|j\:27e9.";
-trBrKt::usage = "Triangular spinor bracket \:27e8i|j].";
-sq\[Gamma]Tr::usage = "\:27e8i|\[Gamma]^\[Mu]|j].";
-tr\[Gamma]Sq::usage = "\:27e8i|\[Gamma]^\[Mu]|j\:27e9.";
-sqPPsq::usage = "\:27e8i|p q|j\:27e9.";
-trPPtr::usage = "\:27e8i|p q|j].";
-sqPtr::usage = "[i|p|j].";
-trPsq::usage = "\:27e8i|p|j\:27e9.";
+sqBrKt::usage = "Square spinor bracket [i|j].";
+trBrKt::usage = "Triangular spinor bracket \:27e8i|j\[RightAngleBracket].";
+sq\[Gamma]Tr::usage = "[i|\[Gamma]^\[Mu]|j\[RightAngleBracket].";
+tr\[Gamma]Sq::usage = "\:27e8i|\[Gamma]^\[Mu]|j].";
+sqPPsq::usage = "[i|p q|j].";
+trPPtr::usage = "\:27e8i|p q|j\[RightAngleBracket].";
+sqPtr::usage = "[i|p|j\[RightAngleBracket].";
+trPsq::usage = "\:27e8i|p|j].";
 
 (* Polarization symbols *)
 (*\[Epsilon]Plus::usage = "Positive helicity polarization vector.";
@@ -237,9 +237,9 @@ numVecs=StringLength[pol];
 numFerms=polVecEval[[1,1,1]]-1;
 Table[With[{kk=kk,g=kk+numFerms},RuleDelayed[ToExpression["Global`epsp"<>ToString[kk]][i_],(Piecewise[{{\[Epsilon]Plus,StringTake[pol,{kk}]=="+"},{\[Epsilon]Minus,StringTake[pol,{kk}]=="-"},{\[Epsilon]0,StringTake[pol,{kk}]=="0"}}][g]/.polVecEval)[[i]]]],{kk,1,numVecs}]
 ];
-eqToMatch[ampOS_,ampSMEFT_,pol_,nf_,nV_,nS_,masses_:0]:=Block[
+eqToMatch[ampOS_,ampSMEFT_,pol_,nf_,nV_,nS_,masses_:0,rndSpinors_:Automatic]:=Block[
 {phSpPt,phSpPtSpinProd,phSpMom,phSpPolVec,rndSpinorSet},
-rndSpinorSet=randomSpinors[];
+rndSpinorSet=If[rndSpinors===Automatic,randomSpinors[],rndSpinors];
 phSpPt=generateKinematics[nf,nV,nS,masses];
 phSpPtSpinProd=reempSpinProd[phSpPt,rndSpinorSet];
 phSpMom=momReplacement[phSpPt];
