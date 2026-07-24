@@ -7,8 +7,8 @@
 
 BeginPackage["SpinorReplacements`"];
 Print["SpinorReplacements: numerical evaluation of massive and massless helicity spinors.\n"];
-Print["Version: 0.17"];
-Print["Date: 2/07/2026"];
+Print["Version: 0.19"];
+Print["Date: 24/07/2026"];
 Print["Author: Alejo N. Rossia"];
 Print["Affiliations: Universita di Padova"];
 (* Load the external packages needed *)
@@ -50,6 +50,7 @@ Begin["`Private`"];
 (* Load mosca's NumericalKinematics *)
 (*Get["SpinorReplacements`ExternalPackages`NumericalKinematics`"];*)
 Get["SpinorReplacements`ExternalPackages`KinematicSubstitution`"];
+Get["SpinorReplacements`ExternalPackages`LCeps4eval`"];
 generateKinematics[nF_,nV_,nS_,masses_:0]:=KinematicConfigurations[nF,nV,nS,masses];
 
 
@@ -235,16 +236,25 @@ ret=Flatten[Table[ToExpression["p"<>ToString[ii]][jj]->listPs[[ii,jj]],{ii,1,num
 replacePolVecs[pol_,polVecEval_]:=Block[{numVecs,numFerms},
 numVecs=StringLength[pol];
 numFerms=polVecEval[[1,1,1]]-1;
-Table[With[{kk=kk,g=kk+numFerms},RuleDelayed[ToExpression["Global`epsp"<>ToString[kk]][i_],(Piecewise[{{\[Epsilon]Plus,StringTake[pol,{kk}]=="+"},{\[Epsilon]Minus,StringTake[pol,{kk}]=="-"},{\[Epsilon]0,StringTake[pol,{kk}]=="0"}}][g]/.polVecEval)[[i]]]],{kk,1,numVecs}]
+Table[With[{kk=kk,g=kk+numFerms},
+RuleDelayed[ToExpression["Global`epsp"<>ToString[kk]][i_],
+(Piecewise[{{\[Epsilon]Plus,StringTake[pol,{kk}]=="+"},{\[Epsilon]Minus,StringTake[pol,{kk}]=="-"},
+{\[Epsilon]0,StringTake[pol,{kk}]=="0"}}][g]/.polVecEval)[[i]]]],{kk,1,numVecs}]
 ];
 eqToMatch[ampOS_,ampSMEFT_,pol_,nf_,nV_,nS_,masses_:0,rndSpinors_:Automatic]:=Block[
-{phSpPt,phSpPtSpinProd,phSpMom,phSpPolVec,rndSpinorSet},
+{phSpPt,phSpPtSpinProd,phSpMom,phSpPolVec,rndSpinorSet,ret,gmet,preRepLC,repLC},
 rndSpinorSet=If[rndSpinors===Automatic,randomSpinors[],rndSpinors];
 phSpPt=generateKinematics[nf,nV,nS,masses];
 phSpPtSpinProd=reempSpinProd[phSpPt,rndSpinorSet];
 phSpMom=momReplacement[phSpPt];
 phSpPolVec=replacePolVecs[pol,Flatten[polVectors[phSpPt,phSpPtSpinProd,rndSpinorSet]]];
-((ampOS/.phSpPtSpinProd/.phSpPolVec/.phSpMom)-(ampSMEFT/.phSpPolVec/.phSpMom))
+ret=((ampOS/.phSpPtSpinProd/.phSpPolVec/.phSpMom)-(ampSMEFT/.phSpPolVec/.phSpMom));
+If[MemberQ[Variables[ret],SpinorReplacements`LCeps4[__]],
+gmet=DiagonalMatrix[{1,-1,-1,-1}];
+preRepLC={SpinorReplacements`eps[i_]:>ToExpression["Global`epsp"<>ToString[i]],SpinorReplacements`pmom[i_]:>ToExpression["p"<>ToString[i]]};
+repLC={SpinorReplacements`LCeps4[A_,B_,C_,D_]:>Sum[Normal[LeviCivitaTensor[4]][[m, n, r, s]] (A/.preRepLC)[m] (B/.preRepLC)[n] (C/.preRepLC)[r] (D/.preRepLC)[s] gmet[[m,m]] gmet[[n,n]] gmet[[r,r]] gmet[[s,s]], {m,4},{n,4},{r,4},{s,4}]};
+ret=ret/.repLC/.phSpPolVec/.phSpMom;];
+ret
 ];
 End[];
 EndPackage[];
